@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import './styles/App.scss';
+import SignUp from './pages/SignUp';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
+import ForgotPassword from './pages/ForgotPassword';
+import Navbar from './layout/Navbar';
+import Dashboard from './pages/Dashboard';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { Fragment } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import PrivateRoute from '../routes/PrivateRoute';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 
-function App() {
+const App = () => {
+  const { currentUser } = useAuth();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <CssBaseline />
+      <Navbar />
+      <Fragment>
+        <Switch>
+          <Route exact path='/'>
+            {currentUser ? <Redirect to='/dashboard' /> : <Login />}
+          </Route>
+          <Route exact path='/login' component={Login} />
+          <Route exact path='/signup' component={SignUp} />
+          <Route exact path='/forgotpassword' component={ForgotPassword} />
+          <PrivateRoute exact path='/profile' component={Profile} />
+          <PrivateRoute exact path='/dashboard' component={Dashboard} />
+        </Switch>
+      </Fragment>
+    </Router>
   );
-}
+};
 
 export default App;

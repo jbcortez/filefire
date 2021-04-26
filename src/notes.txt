@@ -1,0 +1,5 @@
+3. Rename files and folders
+4. Alerts
+5. Media queries:
+    - Context menu on touchscreen
+6. Firebase rules, push to production

@@ -1,0 +1,38 @@
+#context-menu {
+  position: fixed;
+  z-index: 10;
+  width: 30rem;
+  background: #fff !important;
+  border-radius: 5px;
+  transform: scale(0);
+  transform-origin: top left;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+
+  &.active {
+    transform: scale(1);
+    transition: transform 300ms ease-in-out;
+  }
+
+  & .item {
+    padding: 8px 10px;
+    font-size: 15px;
+    color: rgb(58, 58, 58);
+
+    & i {
+      display: inline-block;
+
+      margin: 0 1.3rem;
+    }
+
+    &:hover {
+      background: rgb(247, 247, 247);
+      border-radius: 5px;
+    }
+  }
+
+  & hr {
+    margin: 2px 0;
+    border-color: #555;
+  }
+}
