@@ -6,9 +6,10 @@ import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/Dashboard.scss';
 import UploadFileButton from '../layout/UploadFileButton';
 import FolderBreadcrumbs from '../layout/FolderBreadcrumbs';
+import Alert from '../layout/Alert';
 
 const Dashboard = () => {
-  const { currentFolder, getChildFolders, getChildFiles } = useDB();
+  const { currentFolder, getChildFolders, getChildFiles, alert } = useDB();
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -29,6 +30,7 @@ const Dashboard = () => {
         </div>
         <FileList />
       </div>
+      {alert ? <Alert /> : undefined}
     </div>
   );
 };

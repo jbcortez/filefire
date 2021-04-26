@@ -7,6 +7,8 @@ import { styles } from '../../styles/Styles';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useDB } from '../../contexts/DBContext';
+import FormAlert from '../layout/FormAlert';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,6 +18,7 @@ const Login = () => {
   const classes = useStyles();
 
   const { logIn } = useAuth();
+  const { handleFormAlert, alert } = useDB();
 
   const history = useHistory();
 
@@ -25,8 +28,8 @@ const Login = () => {
     try {
       await logIn(email, password);
       history.push('/');
-    } catch (e) {
-      console.log(e);
+    } catch {
+      handleFormAlert('error', 'Incorrect username or password');
     }
   };
 
@@ -36,7 +39,7 @@ const Login = () => {
         <Typography variant='h4' component='h2'>
           Log In
         </Typography>
-
+        {alert && <FormAlert />}
         <form autoComplete='off' onSubmit={onSubmit} className={classes.form}>
           <TextField
             color='primary'

@@ -85,16 +85,13 @@ const ListItem = ({ item, index }) => {
     }
 
     function handleRename(e) {
-      setOpen(true);
+      if (item.isFolder) {
+        setOpen(true);
+      }
+
       childFolders.forEach((childFolder) => {
         if (e.target.innerText === childFolder.name) {
           renameFolder(childFolder.id);
-        }
-      });
-
-      childFiles.forEach((childFile) => {
-        if (e.target.innerText === childFile.name) {
-          renameFile(childFile.id);
         }
       });
 
@@ -147,8 +144,8 @@ const ListItem = ({ item, index }) => {
         open={open}
         setOpen={setOpen}
         handleSubmit={handleSubmit}
-        label={item.isFolder === true ? 'Folder name' : 'File name'}
-        headline={item.isFolder === true ? 'Rename folder' : 'Rename file'}
+        label='Folder name'
+        headline='Rename folder'
       />
     </div>
   );

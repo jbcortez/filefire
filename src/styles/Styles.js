@@ -32,4 +32,7 @@ export const styles = {
     outline: 'none',
     transform: 'translate(-50%, -50%)',
   },
+  alert: {
+    marginBottom: '1.5rem',
+  },
 };

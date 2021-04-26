@@ -39,7 +39,7 @@ const Navbar = () => {
   return (
     <header className='navbar'>
       <div className='flex-center'>
-        <i className='fas fa-fire fa-2x logo'></i>
+        <i className='fa fa-fire fa-2x logo'></i>
         <Link
           className='navbar__logo'
           to='/'

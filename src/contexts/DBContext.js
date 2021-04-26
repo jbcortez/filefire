@@ -21,6 +21,9 @@ export const DBProvider = ({ children }) => {
   const [childFolders, setChildFolders] = useState([]);
   const [childFiles, setChildFiles] = useState([]);
   const [name, setName] = useState(''); // used for modal form input
+  const [alert, setAlert] = useState(false);
+  const [alertType, setAlertType] = useState('success');
+  const [alertMsg, setAlertMsg] = useState('');
 
   const { currentUser } = useAuth();
 
@@ -241,16 +244,13 @@ export const DBProvider = ({ children }) => {
       .catch((error) => alert(error.message));
   };
 
-  const renameFile = (fileId, fileName) => {
-    database.files
-      .doc(fileId)
-      .update({
-        name: fileName,
-      })
-      .then(() => {
-        getChildFiles();
-      })
-      .catch((error) => alert(error.message));
+  const handleFormAlert = (type, message) => {
+    setAlertType(type);
+    setAlertMsg(message);
+    setAlert(true);
+    setTimeout(() => {
+      setAlert(false);
+    }, 5000);
   };
 
   const value = {
@@ -265,9 +265,16 @@ export const DBProvider = ({ children }) => {
     deleteFile,
     downloadFile,
     renameFolder,
-    renameFile,
+
     name,
     setName,
+    handleFormAlert,
+    setAlert,
+    alert,
+    setAlertType,
+    alertType,
+    setAlertMsg,
+    alertMsg,
   };
 
   return <DBContext.Provider value={value}>{children}</DBContext.Provider>;

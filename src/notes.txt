@@ -1,4 +1,3 @@
-3. Rename files and folders
 4. Alerts
 5. Media queries:
     - Context menu on touchscreen

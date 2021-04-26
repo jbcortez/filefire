@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useDB } from '../../contexts/DBContext';
 
 const CreateFolderButton = ({ currentFolder }) => {
-  const { name, setName } = useDB();
+  const { name, setName, handleFormAlert } = useDB();
 
   const [open, setOpen] = useState(false);
 
@@ -27,17 +27,23 @@ const CreateFolderButton = ({ currentFolder }) => {
     const path = [...currentFolder.path];
     path.push({ name: currentFolder.name, id: currentFolder.id });
 
-    database.folders.add({
-      name: name,
-      parentId: currentFolder.id,
-      userId: currentUser.uid,
-      fileSize: '-',
-      isFolder: true,
-      path: path,
-      timestamp: formatTime(database.getCurrentTimestamp()),
-    });
+    try {
+      database.folders.add({
+        name: name,
+        parentId: currentFolder.id,
+        userId: currentUser.uid,
+        fileSize: '-',
+        isFolder: true,
+        path: path,
+        timestamp: formatTime(database.getCurrentTimestamp()),
+      });
 
-    getChildFolders();
+      getChildFolders();
+
+      handleFormAlert('success', 'Folder created');
+    } catch {
+      handleFormAlert('error', 'Error: folder not created');
+    }
 
     setName('');
     handleClose();

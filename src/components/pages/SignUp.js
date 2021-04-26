@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { styles } from '../../styles/Styles';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useDB } from '../../contexts/DBContext';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +15,7 @@ const SignUp = () => {
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const { signUp } = useAuth();
+  const { handleAlert } = useDB();
 
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -37,7 +39,7 @@ const SignUp = () => {
       await signUp(email, password);
       history.push('/');
     } catch (e) {
-      console.log(e);
+      handleAlert('error', e.message);
     }
   };
 
@@ -51,6 +53,7 @@ const SignUp = () => {
         <form className={classes.form} onSubmit={onSubmit}>
           <TextField
             name='email'
+            required
             InputProps={{
               classes: {
                 input: classes.inputField,
@@ -66,6 +69,7 @@ const SignUp = () => {
           />
           <TextField
             name='password'
+            required
             InputProps={{
               classes: {
                 input: classes.inputField,
@@ -81,6 +85,7 @@ const SignUp = () => {
           />
           <TextField
             name='password-confirm'
+            required
             InputProps={{
               classes: {
                 input: classes.inputField,
