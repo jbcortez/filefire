@@ -14,11 +14,11 @@ const FileList = () => {
         <div className='fileList-wrapper__header'>File size</div>
         {childFolders.length > 0 &&
           childFolders.map((folder, i) => {
-            return <ListItem key={folder.id} folder={folder} index={i} />;
+            return <ListItem key={folder.id} item={folder} index={i} />;
           })}
         {childFiles.length > 0 &&
-          childFiles.map((folder, i) => {
-            return <ListItem key={folder.id} folder={folder} index={i} />;
+          childFiles.map((file, i) => {
+            return <ListItem key={file.id} item={file} index={i} />;
           })}
       </div>
     </div>

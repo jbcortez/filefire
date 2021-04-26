@@ -20,6 +20,7 @@ export const DBProvider = ({ children }) => {
   const [currentFolder, setCurrentFolder] = useState(ROOT_FOLDER);
   const [childFolders, setChildFolders] = useState([]);
   const [childFiles, setChildFiles] = useState([]);
+  const [name, setName] = useState(''); // used for modal form input
 
   const { currentUser } = useAuth();
 
@@ -228,9 +229,29 @@ export const DBProvider = ({ children }) => {
       });
   };
 
-  const renameFolder = (folderId) => {};
+  const renameFolder = (folderId, folderName) => {
+    database.folders
+      .doc(folderId)
+      .update({
+        name: folderName,
+      })
+      .then(() => {
+        getChildFolders();
+      })
+      .catch((error) => alert(error.message));
+  };
 
-  const renameFile = (fileId) => {};
+  const renameFile = (fileId, fileName) => {
+    database.files
+      .doc(fileId)
+      .update({
+        name: fileName,
+      })
+      .then(() => {
+        getChildFiles();
+      })
+      .catch((error) => alert(error.message));
+  };
 
   const value = {
     currentFolder,
@@ -245,6 +266,8 @@ export const DBProvider = ({ children }) => {
     downloadFile,
     renameFolder,
     renameFile,
+    name,
+    setName,
   };
 
   return <DBContext.Provider value={value}>{children}</DBContext.Provider>;
