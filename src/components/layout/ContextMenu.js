@@ -3,11 +3,16 @@ import '../../styles/ContextMenu.scss';
 
 const ContextMenu = () => {
   return (
-    <div id='context-menu'>
-      <div className='item' id='delete'>
-        <i className='fa fa-trash'></i> Delete
-      </div>
-    </div>
+    <>
+      <ul id='context-menu'>
+        <li className='item' id='delete'>
+          <i className='fa fa-trash'></i>Delete
+        </li>
+        <li className='item' id='rename'>
+          <i className='fa fa-pencil'></i>Rename
+        </li>
+      </ul>
+    </>
   );
 };
 

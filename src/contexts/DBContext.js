@@ -228,6 +228,10 @@ export const DBProvider = ({ children }) => {
       });
   };
 
+  const renameFolder = (folderId) => {};
+
+  const renameFile = (fileId) => {};
+
   const value = {
     currentFolder,
     getChildFolders,
@@ -239,6 +243,8 @@ export const DBProvider = ({ children }) => {
     deleteFolder,
     deleteFile,
     downloadFile,
+    renameFolder,
+    renameFile,
   };
 
   return <DBContext.Provider value={value}>{children}</DBContext.Provider>;
