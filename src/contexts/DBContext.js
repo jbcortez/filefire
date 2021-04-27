@@ -252,11 +252,14 @@ export const DBProvider = ({ children }) => {
     }, 5000);
   };
 
-  const handleContextMenu = (e, setOpen, item) => {
+  //======================== Begin Context Menu ========================
+
+  const handleContextMenu = (e, setOpen) => {
     e.preventDefault();
 
     const menu = document.getElementById('context-menu');
 
+    // Displays folder options when right-click a folder
     childFolders.forEach((childFolder) => {
       if (e.target.innerText === childFolder.name) {
         const folderOptions = document.getElementsByClassName('folder');
@@ -273,6 +276,7 @@ export const DBProvider = ({ children }) => {
       }
     });
 
+    // Displays file options when right-click a file
     childFiles.forEach((childFile) => {
       if (e.target.innerText === childFile.name) {
         const fileOptions = document.getElementsByClassName('file');
@@ -289,19 +293,8 @@ export const DBProvider = ({ children }) => {
       }
     });
 
-    menu.classList.remove('active');
-    menu.style.top = e.pageY + 'px';
-    menu.style.left = e.pageX + 'px';
-
-    setTimeout(() => {
-      menu.classList.add('active');
-    }, 0);
-
-    window.addEventListener('click', () => {
-      menu.classList.remove('active');
-    });
-
-    function handleDelete() {
+    // ============ Delete handler ============
+    const handleDelete = () => {
       childFolders.forEach((item) => {
         if (e.target.innerText === item.name) {
           deleteFolder(item.id);
@@ -314,23 +307,14 @@ export const DBProvider = ({ children }) => {
         }
       });
 
+      const deleteBtn = document.getElementById('delete');
       deleteBtn.removeEventListener('click', handleDelete);
       deleteBtn.setAttribute('listener', 'false');
-    }
+    };
 
-    const deleteBtn = document.getElementById('delete');
-    if (deleteBtn.getAttribute('listener') !== 'true') {
-      deleteBtn.addEventListener('click', handleDelete);
-      deleteBtn.setAttribute('listener', 'true');
-    }
-
-    function handleRename(e) {
-      if (item.isFolder) {
-        setOpen(true);
-      } else {
-        handleAlert('error', 'Sorry, files cannot be renamed');
-      }
-
+    // ============ Rename handler ============
+    const handleRename = (e, setOpen) => {
+      setOpen(true);
       childFolders.forEach((childFolder) => {
         if (e.target.innerText === childFolder.name) {
           renameFolder(childFolder.id);
@@ -340,14 +324,51 @@ export const DBProvider = ({ children }) => {
       const renameBtn = document.getElementById('rename');
       renameBtn.removeEventListener('click', handleRename);
       renameBtn.setAttribute('listener', 'false');
+    };
+
+    // ======================== Handle context menu event listeners ========================
+    // ============ Delete ============
+    const deleteBtn = document.getElementById('delete');
+    if (deleteBtn.getAttribute('listener') === 'true') {
+      const newDeleteBtn = deleteBtn.cloneNode(true); // Clone node to remove event listeners
+      deleteBtn.parentNode.replaceChild(newDeleteBtn, deleteBtn);
+      newDeleteBtn.addEventListener('click', handleDelete);
     }
 
+    if (deleteBtn.getAttribute('listener') !== 'true') {
+      deleteBtn.addEventListener('click', handleDelete);
+      deleteBtn.setAttribute('listener', 'true');
+    }
+
+    // ============ Rename ============
     const renameBtn = document.getElementById('rename');
+    if (renameBtn.getAttribute('listener') === 'true') {
+      const newRenameBtn = renameBtn.cloneNode(true); // Clone node to remove event listeners
+      renameBtn.parentNode.replaceChild(newRenameBtn, renameBtn);
+      newRenameBtn.addEventListener('click', handleRename);
+    }
+
     if (renameBtn.getAttribute('listener') !== 'true') {
       renameBtn.addEventListener('click', handleRename);
       renameBtn.setAttribute('listener', 'true');
     }
+
+    menu.classList.remove('active');
+    menu.style.top = e.pageY + 'px';
+    menu.style.left = e.pageX + 'px';
+
+    // Show animation every time context menu is opened
+    setTimeout(() => {
+      menu.classList.add('active');
+    }, 0);
+
+    // Hide context menu when clicking off menu
+    window.addEventListener('click', () => {
+      menu.classList.remove('active');
+    });
   };
+
+  //======================== End Context Menu ========================
 
   const value = {
     currentFolder,

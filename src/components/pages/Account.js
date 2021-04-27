@@ -11,11 +11,11 @@ import firebase from 'firebase/app';
 import Alert from '../layout/Alert';
 
 const Account = () => {
-  const [email, setEmail] = useState();
-  const [newPassword, setNewPassword] = useState();
-  const [confirmPassword, setConfirmPassword] = useState();
-  const [currentPassword, setCurrentPassword] = useState();
-  const [currentPasswordEmail, setCurrentPasswordEmail] = useState();
+  const [email, setEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [currentPasswordEmail, setCurrentPasswordEmail] = useState('');
 
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -180,9 +180,3 @@ const Account = () => {
 };
 
 export default Account;
-
-// current password
-// new password
-// confirm new password
-// new email
-// update buttons
