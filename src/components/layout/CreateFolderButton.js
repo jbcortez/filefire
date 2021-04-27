@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useDB } from '../../contexts/DBContext';
 
 const CreateFolderButton = ({ currentFolder }) => {
-  const { name, setName, handleFormAlert } = useDB();
+  const { name, setName, handleAlert } = useDB();
 
   const [open, setOpen] = useState(false);
 
@@ -40,9 +40,9 @@ const CreateFolderButton = ({ currentFolder }) => {
 
       getChildFolders();
 
-      handleFormAlert('success', 'Folder created');
+      handleAlert('success', 'Folder created');
     } catch {
-      handleFormAlert('error', 'Error: folder not created');
+      handleAlert('error', 'Error: folder not created');
     }
 
     setName('');

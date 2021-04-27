@@ -96,16 +96,17 @@ export const DBProvider = ({ children }) => {
               .delete()
               .then((snapshot) => {
                 getChildFiles();
+                handleAlert('success', 'File successfully deleted');
                 // alert success
               })
               .catch((error) => {
                 // alert error
-                console.error(error);
+                handleAlert('error', 'Oops! Something went wrong');
               });
           })
           .catch((error) => {
             // alert error
-            console.error(error);
+            handleAlert('error', 'Oops! Something went wrong');
           });
       });
   };
@@ -151,14 +152,10 @@ export const DBProvider = ({ children }) => {
             .ref(`/files/${currentUser.uid}/${filePath}`)
             .delete()
             .then(() => {
-              // Alert Success
               doc.ref.delete();
               getChildFiles();
             })
-            .catch((error) => {
-              // alert error
-              console.error(error);
-            });
+            .catch((error) => {});
         });
       });
 
@@ -178,6 +175,7 @@ export const DBProvider = ({ children }) => {
           deleteFolder(doc.id, parentFolders);
           getChildFolders();
         });
+        handleAlert('success', 'Folder successfully deleted');
       });
   };
 
@@ -240,17 +238,115 @@ export const DBProvider = ({ children }) => {
       })
       .then(() => {
         getChildFolders();
+        handleAlert('success', 'Folder name updated');
       })
-      .catch((error) => alert(error.message));
+      .catch((error) => handleAlert('error', 'Oops! Something went wrong'));
   };
 
-  const handleFormAlert = (type, message) => {
+  const handleAlert = (type, message) => {
     setAlertType(type);
     setAlertMsg(message);
     setAlert(true);
     setTimeout(() => {
       setAlert(false);
     }, 5000);
+  };
+
+  const handleContextMenu = (e, setOpen, item) => {
+    e.preventDefault();
+
+    const menu = document.getElementById('context-menu');
+
+    childFolders.forEach((childFolder) => {
+      if (e.target.innerText === childFolder.name) {
+        const folderOptions = document.getElementsByClassName('folder');
+        for (let option of folderOptions) {
+          option.classList.remove('hidden');
+        }
+
+        const fileOptions = document.getElementsByClassName('file');
+        for (let option of fileOptions) {
+          if (!option.classList.contains('folder')) {
+            option.classList.add('hidden');
+          }
+        }
+      }
+    });
+
+    childFiles.forEach((childFile) => {
+      if (e.target.innerText === childFile.name) {
+        const fileOptions = document.getElementsByClassName('file');
+        for (let option of fileOptions) {
+          option.classList.remove('hidden');
+        }
+
+        const folderOptions = document.getElementsByClassName('folder');
+        for (let option of folderOptions) {
+          if (!option.classList.contains('file')) {
+            option.classList.add('hidden');
+          }
+        }
+      }
+    });
+
+    menu.classList.remove('active');
+    menu.style.top = e.pageY + 'px';
+    menu.style.left = e.pageX + 'px';
+
+    setTimeout(() => {
+      menu.classList.add('active');
+    }, 0);
+
+    window.addEventListener('click', () => {
+      menu.classList.remove('active');
+    });
+
+    function handleDelete() {
+      childFolders.forEach((item) => {
+        if (e.target.innerText === item.name) {
+          deleteFolder(item.id);
+        }
+      });
+
+      childFiles.forEach((item) => {
+        if (e.target.innerText === item.name) {
+          deleteFile(item.id);
+        }
+      });
+
+      deleteBtn.removeEventListener('click', handleDelete);
+      deleteBtn.setAttribute('listener', 'false');
+    }
+
+    const deleteBtn = document.getElementById('delete');
+    if (deleteBtn.getAttribute('listener') !== 'true') {
+      deleteBtn.addEventListener('click', handleDelete);
+      deleteBtn.setAttribute('listener', 'true');
+    }
+
+    function handleRename(e) {
+      if (item.isFolder) {
+        setOpen(true);
+      } else {
+        handleAlert('error', 'Sorry, files cannot be renamed');
+      }
+
+      childFolders.forEach((childFolder) => {
+        if (e.target.innerText === childFolder.name) {
+          renameFolder(childFolder.id);
+        }
+      });
+
+      const renameBtn = document.getElementById('rename');
+      renameBtn.removeEventListener('click', handleRename);
+      renameBtn.setAttribute('listener', 'false');
+    }
+
+    const renameBtn = document.getElementById('rename');
+    if (renameBtn.getAttribute('listener') !== 'true') {
+      renameBtn.addEventListener('click', handleRename);
+      renameBtn.setAttribute('listener', 'true');
+    }
   };
 
   const value = {
@@ -265,16 +361,16 @@ export const DBProvider = ({ children }) => {
     deleteFile,
     downloadFile,
     renameFolder,
-
     name,
     setName,
-    handleFormAlert,
+    handleAlert,
     setAlert,
     alert,
     setAlertType,
     alertType,
     setAlertMsg,
     alertMsg,
+    handleContextMenu,
   };
 
   return <DBContext.Provider value={value}>{children}</DBContext.Provider>;

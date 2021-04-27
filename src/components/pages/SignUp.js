@@ -8,6 +8,7 @@ import { styles } from '../../styles/Styles';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useDB } from '../../contexts/DBContext';
+import Alert from '../layout/Alert';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const SignUp = () => {
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const { signUp } = useAuth();
-  const { handleAlert } = useDB();
+  const { handleAlert, alert } = useDB();
 
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -49,7 +50,7 @@ const SignUp = () => {
         <Typography variant='h4' component='h2'>
           Sign Up
         </Typography>
-
+        {alert && <Alert formAlert={true} />}
         <form className={classes.form} onSubmit={onSubmit}>
           <TextField
             name='email'

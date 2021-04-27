@@ -30,7 +30,7 @@ const Dashboard = () => {
         </div>
         <FileList />
       </div>
-      {alert ? <Alert /> : undefined}
+      {alert && <Alert formAlert={false} />}
     </div>
   );
 };

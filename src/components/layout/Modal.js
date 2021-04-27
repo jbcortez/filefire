@@ -49,7 +49,7 @@ const Modal = ({ open, setOpen, handleSubmit, label, headline }) => {
                 Close
               </Button>
               <Button variant='contained' color='primary' type='submit'>
-                Submit
+                Ok
               </Button>
             </div>
           </form>

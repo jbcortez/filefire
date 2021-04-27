@@ -3,18 +3,15 @@ import { useDB } from '../../contexts/DBContext';
 import ContextMenu from '../layout/ContextMenu';
 import Modal from '../layout/Modal';
 
-const ListItem = ({ item, index }) => {
+const ListItem = ({ item }) => {
   const {
     selectFolder,
-    childFolders,
-    childFiles,
-    deleteFolder,
-    deleteFile,
     downloadFile,
     renameFolder,
     renameFile,
     setName,
     name,
+    handleContextMenu,
   } = useDB();
 
   const [open, setOpen] = useState(false);
@@ -51,61 +48,6 @@ const ListItem = ({ item, index }) => {
     e.target.classList.remove('selected');
   };
 
-  // ************************** Context Menu **************************
-  const handleContextMenu = (e, folder) => {
-    e.preventDefault();
-
-    const menu = document.getElementById('context-menu');
-    menu.classList.remove('active');
-    menu.style.top = e.pageY + 'px';
-    menu.style.left = e.pageX + 'px';
-
-    setTimeout(() => {
-      menu.classList.add('active');
-    }, 0);
-
-    window.addEventListener('click', () => {
-      menu.classList.remove('active');
-    });
-
-    function handleDelete() {
-      childFolders.forEach((item) => {
-        if (e.target.innerText === item.name) {
-          deleteFolder(item.id);
-        }
-      });
-
-      childFiles.forEach((item) => {
-        if (e.target.innerText === item.name) {
-          deleteFile(item.id);
-        }
-      });
-
-      deleteBtn.removeEventListener('click', handleDelete);
-    }
-
-    function handleRename(e) {
-      if (item.isFolder) {
-        setOpen(true);
-      }
-
-      childFolders.forEach((childFolder) => {
-        if (e.target.innerText === childFolder.name) {
-          renameFolder(childFolder.id);
-        }
-      });
-
-      const renameBtn = document.getElementById('rename');
-      renameBtn.removeEventListener('click', handleRename);
-    }
-
-    const deleteBtn = document.getElementById('delete');
-    deleteBtn.addEventListener('click', handleDelete);
-
-    const renameBtn = document.getElementById('rename');
-    renameBtn.addEventListener('click', handleRename);
-  };
-
   return (
     <div className='grid-contents'>
       <div
@@ -119,9 +61,7 @@ const ListItem = ({ item, index }) => {
             ? () => selectFolder(item.id)
             : () => downloadFile(item.id)
         }
-        onContextMenu={(e) => {
-          handleContextMenu(e, item);
-        }}>
+        onContextMenu={(e) => handleContextMenu(e, setOpen, item)}>
         {item.isFolder === true ? (
           <i className='fa fa-folder'></i>
         ) : (
@@ -144,8 +84,8 @@ const ListItem = ({ item, index }) => {
         open={open}
         setOpen={setOpen}
         handleSubmit={handleSubmit}
-        label='Folder name'
-        headline='Rename folder'
+        label='Name'
+        headline='Rename'
       />
     </div>
   );

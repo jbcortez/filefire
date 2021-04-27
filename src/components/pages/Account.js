@@ -6,11 +6,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { auth } from '../../firebase';
+import { useDB } from '../../contexts/DBContext';
 import firebase from 'firebase/app';
+import Alert from '../layout/Alert';
 
 const Account = () => {
   const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [newPassword, setNewPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [currentPassword, setCurrentPassword] = useState();
   const [currentPasswordEmail, setCurrentPasswordEmail] = useState();
@@ -18,11 +20,13 @@ const Account = () => {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
 
-  const reauthenticate = (currentPassowrd) => {
+  const { handleAlert, alert } = useDB();
+
+  const reauthenticate = (pass) => {
     const user = auth.currentUser;
     const credential = firebase.auth.EmailAuthProvider.credential(
       user.email,
-      currentPassword
+      pass
     );
     return user.reauthenticateWithCredential(credential);
   };
@@ -30,21 +34,21 @@ const Account = () => {
   const onEmailSubmit = (e) => {
     e.preventDefault();
 
-    reauthenticate(currentPassword)
+    reauthenticate(currentPasswordEmail)
       .then(() => {
         auth.currentUser
           .updateEmail(email)
           .then(() => {
             // alert success
-            alert('Email changed');
+            handleAlert('success', 'Email successfully updated');
           })
           .catch((error) => {
             // alert error
-            alert(error.message);
+            handleAlert('error', 'Oops! Something went wrong');
           });
       })
       .catch((error) => {
-        alert(error.message);
+        handleAlert('error', 'Oops! Something went wrong');
       });
   };
 
@@ -54,18 +58,18 @@ const Account = () => {
     reauthenticate(currentPassword)
       .then(() => {
         auth.currentUser
-          .updatePassword(password)
+          .updatePassword(newPassword)
           .then(() => {
             // alert success
-            alert('Password changed');
+            handleAlert('success', 'Password successfully changed');
           })
           .catch((error) => {
             // alert error
-            alert(error.message);
+            handleAlert('error', 'Oops! Something went wrong');
           });
       })
       .catch((error) => {
-        alert(error.message);
+        handleAlert('error', 'Oops! Something went wrong');
       });
   };
 
@@ -75,6 +79,7 @@ const Account = () => {
         <Typography variant='h4' component='h2'>
           My Account
         </Typography>
+        {alert && <Alert formAlert={true} />}
         <form
           onSubmit={onEmailSubmit}
           className={classes.form}
@@ -141,12 +146,12 @@ const Account = () => {
               },
             }}
             fullWidth
-            type='password'
-            name='password'
+            type='newPassword'
+            name='newPassword'
             label='New Password'
             variant='outlined'
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
+            onChange={(e) => setNewPassword(e.target.value)}
+            value={newPassword}
             required
           />
           <TextField

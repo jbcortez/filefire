@@ -5,7 +5,7 @@ import { useDB } from '../../contexts/DBContext';
 import { useAuth } from '../../contexts/AuthContext';
 
 const UploadFileButton = () => {
-  const { currentFolder, formatTime, getChildFiles } = useDB();
+  const { currentFolder, formatTime, getChildFiles, handleAlert } = useDB();
   const { currentUser } = useAuth();
 
   const formatFileSize = (fileSize) => {
@@ -65,6 +65,7 @@ const UploadFileButton = () => {
           });
 
           getChildFiles();
+          handleAlert('success', 'File successfully uploaded');
         });
       }
     );
