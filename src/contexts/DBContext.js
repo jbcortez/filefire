@@ -255,15 +255,6 @@ export const DBProvider = ({ children }) => {
   };
 
   //======================== Begin Context Menu ========================
-  const handleRename = (menuEvent) => {
-    setOpen(true);
-    // childFolders.forEach((childFolder) => {
-    //   if (menuEvent === childFolder.name) {
-    //     renameFolder(childFolder.id);
-    //   }
-    // });
-  };
-
   const handleDelete = (menuEvent) => {
     childFolders.forEach((item) => {
       if (menuEvent === item.name) {
