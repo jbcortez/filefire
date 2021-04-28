@@ -7,19 +7,15 @@ import { makeStyles } from '@material-ui/styles';
 import { styles } from '../../styles/Styles';
 import { useDB } from '../../contexts/DBContext';
 
-const Modal = ({ open, setOpen, handleSubmit, label, headline }) => {
-  const { name, setName } = useDB();
+const Modal = ({ handleSubmit, label, headline }) => {
+  const { name, setName, open, setOpen } = useDB();
 
   const useStyles = makeStyles(styles);
   const classes = useStyles();
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <>
-      <MUIModal open={open} onClose={handleClose}>
+      <MUIModal open={open} onClose={() => setOpen(false)}>
         <div className={classes.modal}>
           <Typography variant='h6' style={{ marginBottom: '2rem' }}>
             {headline}
@@ -44,7 +40,7 @@ const Modal = ({ open, setOpen, handleSubmit, label, headline }) => {
             <div style={{ float: 'right', paddingTop: '2rem' }}>
               <Button
                 variant='outlined'
-                onClick={handleClose}
+                onClick={() => setOpen(false)}
                 style={{ marginRight: '1rem' }}>
                 Close
               </Button>

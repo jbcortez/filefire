@@ -1,37 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDB } from '../../contexts/DBContext';
-import ContextMenu from '../layout/ContextMenu';
-import Modal from '../layout/Modal';
 
 const ListItem = ({ item }) => {
-  const {
-    selectFolder,
-    downloadFile,
-    renameFolder,
-    renameFile,
-    setName,
-    name,
-    handleContextMenu,
-  } = useDB();
-
-  const [open, setOpen] = useState(false);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (item.isFolder) {
-      renameFolder(item.id, name);
-    } else {
-      renameFile(item.id, name);
-    }
-
-    setName('');
-    handleClose();
-  };
+  const { selectFolder, downloadFile, handleContextMenu } = useDB();
 
   // ************************** Highlight item **************************
 
@@ -61,7 +32,7 @@ const ListItem = ({ item }) => {
             ? () => selectFolder(item.id)
             : () => downloadFile(item.id)
         }
-        onContextMenu={(e) => handleContextMenu(e, setOpen, item)}>
+        onContextMenu={(e) => handleContextMenu(e)}>
         {item.isFolder === true ? (
           <i className='fa fa-folder'></i>
         ) : (
@@ -79,14 +50,6 @@ const ListItem = ({ item }) => {
         onDoubleClick={() => selectFolder(item.id)}>
         {item.fileSize}
       </div>
-      <ContextMenu />
-      <Modal
-        open={open}
-        setOpen={setOpen}
-        handleSubmit={handleSubmit}
-        label='Name'
-        headline='Rename'
-      />
     </div>
   );
 };

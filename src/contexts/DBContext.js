@@ -24,6 +24,8 @@ export const DBProvider = ({ children }) => {
   const [alert, setAlert] = useState(false);
   const [alertType, setAlertType] = useState('success');
   const [alertMsg, setAlertMsg] = useState('');
+  const [menuEvent, setMenuEvent] = useState('');
+  const [open, setOpen] = useState(false);
 
   const { currentUser } = useAuth();
 
@@ -253,11 +255,32 @@ export const DBProvider = ({ children }) => {
   };
 
   //======================== Begin Context Menu ========================
+  const handleRename = (menuEvent) => {
+    setOpen(true);
+    // childFolders.forEach((childFolder) => {
+    //   if (menuEvent === childFolder.name) {
+    //     renameFolder(childFolder.id);
+    //   }
+    // });
+  };
 
-  const handleContextMenu = (e, setOpen) => {
+  const handleDelete = (menuEvent) => {
+    childFolders.forEach((item) => {
+      if (menuEvent === item.name) {
+        deleteFolder(item.id);
+      }
+    });
+
+    childFiles.forEach((item) => {
+      if (menuEvent === item.name) {
+        deleteFile(item.id);
+      }
+    });
+  };
+
+  const handleContextMenu = (e) => {
     e.preventDefault();
-
-    const menu = document.getElementById('context-menu');
+    setMenuEvent(e.target.innerText);
 
     // Displays folder options when right-click a folder
     childFolders.forEach((childFolder) => {
@@ -293,66 +316,7 @@ export const DBProvider = ({ children }) => {
       }
     });
 
-    // ============ Delete handler ============
-    const handleDelete = () => {
-      childFolders.forEach((item) => {
-        if (e.target.innerText === item.name) {
-          deleteFolder(item.id);
-        }
-      });
-
-      childFiles.forEach((item) => {
-        if (e.target.innerText === item.name) {
-          deleteFile(item.id);
-        }
-      });
-
-      const deleteBtn = document.getElementById('delete');
-      deleteBtn.removeEventListener('click', handleDelete);
-      deleteBtn.setAttribute('listener', 'false');
-    };
-
-    // ============ Rename handler ============
-    const handleRename = (e, setOpen) => {
-      setOpen(true);
-      childFolders.forEach((childFolder) => {
-        if (e.target.innerText === childFolder.name) {
-          renameFolder(childFolder.id);
-        }
-      });
-
-      const renameBtn = document.getElementById('rename');
-      renameBtn.removeEventListener('click', handleRename);
-      renameBtn.setAttribute('listener', 'false');
-    };
-
-    // ======================== Handle context menu event listeners ========================
-    // ============ Delete ============
-    const deleteBtn = document.getElementById('delete');
-    if (deleteBtn.getAttribute('listener') === 'true') {
-      const newDeleteBtn = deleteBtn.cloneNode(true); // Clone node to remove event listeners
-      deleteBtn.parentNode.replaceChild(newDeleteBtn, deleteBtn);
-      newDeleteBtn.addEventListener('click', handleDelete);
-    }
-
-    if (deleteBtn.getAttribute('listener') !== 'true') {
-      deleteBtn.addEventListener('click', handleDelete);
-      deleteBtn.setAttribute('listener', 'true');
-    }
-
-    // ============ Rename ============
-    const renameBtn = document.getElementById('rename');
-    if (renameBtn.getAttribute('listener') === 'true') {
-      const newRenameBtn = renameBtn.cloneNode(true); // Clone node to remove event listeners
-      renameBtn.parentNode.replaceChild(newRenameBtn, renameBtn);
-      newRenameBtn.addEventListener('click', handleRename);
-    }
-
-    if (renameBtn.getAttribute('listener') !== 'true') {
-      renameBtn.addEventListener('click', handleRename);
-      renameBtn.setAttribute('listener', 'true');
-    }
-
+    const menu = document.getElementById('context-menu');
     menu.classList.remove('active');
     menu.style.top = e.pageY + 'px';
     menu.style.left = e.pageX + 'px';
@@ -367,8 +331,6 @@ export const DBProvider = ({ children }) => {
       menu.classList.remove('active');
     });
   };
-
-  //======================== End Context Menu ========================
 
   const value = {
     currentFolder,
@@ -392,6 +354,11 @@ export const DBProvider = ({ children }) => {
     setAlertMsg,
     alertMsg,
     handleContextMenu,
+    menuEvent,
+    handleRename,
+    handleDelete,
+    open,
+    setOpen,
   };
 
   return <DBContext.Provider value={value}>{children}</DBContext.Provider>;

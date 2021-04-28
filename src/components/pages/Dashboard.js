@@ -6,10 +6,22 @@ import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/Dashboard.scss';
 import UploadFileButton from '../layout/UploadFileButton';
 import FolderBreadcrumbs from '../layout/FolderBreadcrumbs';
+import ContextMenu from '../layout/ContextMenu';
 import Alert from '../layout/Alert';
+import Modal from '../layout/Modal';
 
 const Dashboard = () => {
-  const { currentFolder, getChildFolders, getChildFiles, alert } = useDB();
+  const {
+    currentFolder,
+    getChildFolders,
+    getChildFiles,
+    alert,
+    menuEvent,
+    renameFolder,
+    childFolders,
+    name,
+    setOpen,
+  } = useDB();
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -17,6 +29,16 @@ const Dashboard = () => {
     getChildFiles();
     // eslint-disable-next-line
   }, [currentFolder, currentUser]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    childFolders.forEach((childFolder) => {
+      if (menuEvent === childFolder.name) {
+        renameFolder(childFolder.id, name);
+        setOpen(false);
+      }
+    });
+  };
 
   return (
     <div className='container'>
@@ -29,6 +51,12 @@ const Dashboard = () => {
           <FolderBreadcrumbs currentFolder={currentFolder} />
         </div>
         <FileList />
+        <ContextMenu />
+        <Modal
+          handleSubmit={handleSubmit}
+          label='Name'
+          headline='Rename folder'
+        />
       </div>
       {alert && <Alert formAlert={false} />}
     </div>
