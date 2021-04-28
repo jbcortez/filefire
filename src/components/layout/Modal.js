@@ -7,8 +7,8 @@ import { makeStyles } from '@material-ui/styles';
 import { styles } from '../../styles/Styles';
 import { useDB } from '../../contexts/DBContext';
 
-const Modal = ({ handleSubmit, label, headline }) => {
-  const { name, setName, open, setOpen } = useDB();
+const Modal = ({ open, setOpen, handleSubmit, label, headline }) => {
+  const { name, setName } = useDB();
 
   const useStyles = makeStyles(styles);
   const classes = useStyles();

@@ -245,6 +245,17 @@ export const DBProvider = ({ children }) => {
       .catch((error) => handleAlert('error', 'Oops! Something went wrong'));
   };
 
+  const handleRenameSubmit = (e) => {
+    e.preventDefault();
+    childFolders.forEach((childFolder) => {
+      if (menuEvent === childFolder.name) {
+        renameFolder(childFolder.id, name);
+        setOpen(false);
+        setName('');
+      }
+    });
+  };
+
   const handleAlert = (type, message) => {
     setAlertType(type);
     setAlertMsg(message);
@@ -346,7 +357,7 @@ export const DBProvider = ({ children }) => {
     alertMsg,
     handleContextMenu,
     menuEvent,
-    handleRename,
+    handleRenameSubmit,
     handleDelete,
     open,
     setOpen,

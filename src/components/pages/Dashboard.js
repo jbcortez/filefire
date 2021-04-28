@@ -16,11 +16,9 @@ const Dashboard = () => {
     getChildFolders,
     getChildFiles,
     alert,
-    menuEvent,
-    renameFolder,
-    childFolders,
-    name,
+    handleRenameSubmit,
     setOpen,
+    open,
   } = useDB();
   const { currentUser } = useAuth();
 
@@ -29,16 +27,6 @@ const Dashboard = () => {
     getChildFiles();
     // eslint-disable-next-line
   }, [currentFolder, currentUser]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    childFolders.forEach((childFolder) => {
-      if (menuEvent === childFolder.name) {
-        renameFolder(childFolder.id, name);
-        setOpen(false);
-      }
-    });
-  };
 
   return (
     <div className='container'>
@@ -53,9 +41,11 @@ const Dashboard = () => {
         <FileList />
         <ContextMenu />
         <Modal
-          handleSubmit={handleSubmit}
+          handleSubmit={handleRenameSubmit}
           label='Name'
           headline='Rename folder'
+          open={open}
+          setOpen={setOpen}
         />
       </div>
       {alert && <Alert formAlert={false} />}
