@@ -2,7 +2,7 @@ import React from 'react';
 import { useDB } from '../../contexts/DBContext';
 
 const ListItem = ({ item }) => {
-  const { selectFolder, downloadFile, handleContextMenu } = useDB();
+  const { selectFolder, openFile, handleContextMenu } = useDB();
 
   // ************************** Highlight item **************************
 
@@ -30,7 +30,7 @@ const ListItem = ({ item }) => {
         onDoubleClick={
           item.isFolder === true
             ? () => selectFolder(item.id)
-            : () => downloadFile(item.id)
+            : () => openFile(item.id)
         }
         onContextMenu={(e) => handleContextMenu(e)}>
         {item.isFolder === true ? (

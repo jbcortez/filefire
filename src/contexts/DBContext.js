@@ -24,8 +24,10 @@ export const DBProvider = ({ children }) => {
   const [alert, setAlert] = useState(false);
   const [alertType, setAlertType] = useState('success');
   const [alertMsg, setAlertMsg] = useState('');
-  const [menuEvent, setMenuEvent] = useState('');
-  const [open, setOpen] = useState(false);
+  const [menuTarget, setMenuTarget] = useState('');
+  const [openRename, setOpenRename] = useState(false);
+  const [openURL, setOpenURL] = useState(false);
+  const [URL, setURL] = useState('');
 
   const { currentUser } = useAuth();
 
@@ -217,19 +219,26 @@ export const DBProvider = ({ children }) => {
     return moment(timestamp).format('MMMM Do, YYYY');
   };
 
-  const downloadFile = (fileId) => {
-    database.files
-      .where('userId', '==', currentUser.uid)
-      .where('parentId', '==', currentFolder.id)
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          if (doc.id === fileId) window.open(doc.data().url);
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const openFile = (fileId) => {
+    childFiles.forEach((childFile) => {
+      if (fileId === childFile.id) {
+        window.open(childFile.url);
+      }
+    });
+  };
+
+  const handleOpen = (menuTarget) => {
+    childFolders.forEach((childFolder) => {
+      if (menuTarget === childFolder.name) {
+        selectFolder(childFolder.id);
+      }
+    });
+
+    childFiles.forEach((childFile) => {
+      if (menuTarget === childFile.name) {
+        openFile(childFile.id);
+      }
+    });
   };
 
   const renameFolder = (folderId, folderName) => {
@@ -248,9 +257,9 @@ export const DBProvider = ({ children }) => {
   const handleRenameSubmit = (e) => {
     e.preventDefault();
     childFolders.forEach((childFolder) => {
-      if (menuEvent === childFolder.name) {
+      if (menuTarget === childFolder.name) {
         renameFolder(childFolder.id, name);
-        setOpen(false);
+        setOpenRename(false);
         setName('');
       }
     });
@@ -266,15 +275,15 @@ export const DBProvider = ({ children }) => {
   };
 
   //======================== Begin Context Menu ========================
-  const handleDelete = (menuEvent) => {
+  const handleDelete = (menuTarget) => {
     childFolders.forEach((item) => {
-      if (menuEvent === item.name) {
+      if (menuTarget === item.name) {
         deleteFolder(item.id);
       }
     });
 
     childFiles.forEach((item) => {
-      if (menuEvent === item.name) {
+      if (menuTarget === item.name) {
         deleteFile(item.id);
       }
     });
@@ -282,7 +291,7 @@ export const DBProvider = ({ children }) => {
 
   const handleContextMenu = (e) => {
     e.preventDefault();
-    setMenuEvent(e.target.innerText);
+    setMenuTarget(e.target.innerText);
 
     // Displays folder options when right-click a folder
     childFolders.forEach((childFolder) => {
@@ -334,6 +343,21 @@ export const DBProvider = ({ children }) => {
     });
   };
 
+  const getURL = (menuTarget) => {
+    childFiles.forEach((childFile) => {
+      if (menuTarget === childFile.name) {
+        setURL(childFile.url);
+      }
+    });
+  };
+
+  const downloadFile = (url, menuTarget) => {
+    const link = document.createElement('a');
+    link.download = menuTarget;
+    link.href = url;
+    link.click();
+  };
+
   const value = {
     currentFolder,
     getChildFolders,
@@ -344,7 +368,7 @@ export const DBProvider = ({ children }) => {
     formatTime,
     deleteFolder,
     deleteFile,
-    downloadFile,
+    openFile,
     renameFolder,
     name,
     setName,
@@ -356,11 +380,18 @@ export const DBProvider = ({ children }) => {
     setAlertMsg,
     alertMsg,
     handleContextMenu,
-    menuEvent,
+    menuTarget,
     handleRenameSubmit,
     handleDelete,
-    open,
-    setOpen,
+    openRename,
+    setOpenRename,
+    handleOpen,
+    openURL,
+    setOpenURL,
+    getURL,
+    setURL,
+    URL,
+    downloadFile,
   };
 
   return <DBContext.Provider value={value}>{children}</DBContext.Provider>;

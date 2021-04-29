@@ -17,8 +17,10 @@ const Dashboard = () => {
     getChildFiles,
     alert,
     handleRenameSubmit,
-    setOpen,
-    open,
+    openRename,
+    setOpenRename,
+    openURL,
+    setOpenURL,
   } = useDB();
   const { currentUser } = useAuth();
 
@@ -27,6 +29,12 @@ const Dashboard = () => {
     getChildFiles();
     // eslint-disable-next-line
   }, [currentFolder, currentUser]);
+
+  const copyToClipboard = () => {
+    const urlInput = document.getElementById('urlInput');
+    urlInput.select();
+    document.execCommand('copy');
+  };
 
   return (
     <div className='container'>
@@ -44,8 +52,19 @@ const Dashboard = () => {
           handleSubmit={handleRenameSubmit}
           label='Name'
           headline='Rename folder'
-          open={open}
-          setOpen={setOpen}
+          open={openRename}
+          setOpen={setOpenRename}
+        />
+        <Modal
+          handleSubmit={(e) => {
+            e.preventDefault();
+            copyToClipboard();
+          }}
+          headline='Get link'
+          open={openURL}
+          setOpen={setOpenURL}
+          submitText='Copy link'
+          urlModal={true}
         />
       </div>
       {alert && <Alert formAlert={false} />}

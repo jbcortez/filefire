@@ -7,8 +7,16 @@ import { makeStyles } from '@material-ui/styles';
 import { styles } from '../../styles/Styles';
 import { useDB } from '../../contexts/DBContext';
 
-const Modal = ({ open, setOpen, handleSubmit, label, headline }) => {
-  const { name, setName } = useDB();
+const Modal = ({
+  open,
+  setOpen,
+  handleSubmit,
+  label,
+  headline,
+  submitText,
+  urlModal,
+}) => {
+  const { name, setName, URL } = useDB();
 
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -30,12 +38,13 @@ const Modal = ({ open, setOpen, handleSubmit, label, headline }) => {
                 },
               }}
               fullWidth
+              id={urlModal ? 'urlInput' : ''}
               name='name'
               label={label}
               variant='outlined'
               onChange={(e) => setName(e.target.value)}
-              value={name}
-              required
+              value={urlModal ? URL : name}
+              required={!urlModal}
             />
             <div style={{ float: 'right', paddingTop: '2rem' }}>
               <Button
@@ -45,7 +54,7 @@ const Modal = ({ open, setOpen, handleSubmit, label, headline }) => {
                 Close
               </Button>
               <Button variant='contained' color='primary' type='submit'>
-                Ok
+                {submitText ? submitText : 'Ok'}
               </Button>
             </div>
           </form>

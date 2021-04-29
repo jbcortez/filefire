@@ -4,6 +4,8 @@
     3. Download
     4. Get link
 
-5. Media queries:
+2. log in with facebook
+
+3. Media queries:
     - Context menu on touchscreen
-6. Firebase rules, push to production
+
