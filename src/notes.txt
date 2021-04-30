@@ -1,11 +1,6 @@
-1. Context functionality:
-    1. Open file
-    2. Open folder
-    3. Download
-    4. Get link
+1. log in with google
+2. style mobile
+3. set up media queries
 
-2. log in with facebook
-
-3. Media queries:
-    - Context menu on touchscreen
+    
 

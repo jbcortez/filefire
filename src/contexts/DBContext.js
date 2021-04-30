@@ -69,6 +69,103 @@ export const DBProvider = ({ children }) => {
     });
   };
 
+  const formatFileSize = (fileSize) => {
+    let formattedFileSize;
+
+    if (fileSize < 1000) {
+      formattedFileSize = `${fileSize} B`;
+    }
+
+    if (fileSize > 999 && fileSize < 1000000) {
+      formattedFileSize = `${Math.round(fileSize / 1000)} KB`;
+    }
+
+    if (fileSize > 999999) {
+      formattedFileSize = `${Math.round(fileSize / 1000000)} MB`;
+    }
+
+    return formattedFileSize;
+  };
+
+  const uploadFile = (file) => {
+    let folderPath = [];
+    let fileName = file.name;
+
+    currentFolder.path.forEach((folder) => {
+      if (folder.id !== 'root') {
+        folderPath.push(folder.id);
+      }
+    });
+
+    childFiles.forEach((childFile) => {
+      if (childFile.name === fileName) {
+        fileName = handleDuplicate(fileName);
+      }
+    });
+
+    const filePath = `${folderPath.join('/')}/${
+      currentFolder.id !== 'root' ? currentFolder.id : ''
+    }/${fileName}`;
+
+    const uploadTask = storage
+      .ref(`/files/${currentUser.uid}/${filePath}`)
+      .put(file);
+
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+      },
+      (error) => {
+        //handle unsucessful uploads
+      },
+      () => {
+        // After upload is successful...
+        uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+          database.files.add({
+            name: fileName,
+            fileSize: formatFileSize(uploadTask.snapshot.totalBytes),
+            parentId: currentFolder.id,
+            url: url,
+            userId: currentUser.uid,
+            timestamp: formatTime(database.getCurrentTimestamp()),
+          });
+
+          getChildFiles();
+          handleAlert('success', 'File successfully uploaded');
+        });
+      }
+    );
+  };
+
+  const appendToFilename = (filename, string) => {
+    var dotIndex = filename.lastIndexOf('.');
+    if (dotIndex === -1) return filename + string;
+    else
+      return (
+        filename.substring(0, dotIndex) + string + filename.substring(dotIndex)
+      );
+  };
+
+  const handleDuplicate = (fileName) => {
+    let i = 0;
+    let foundDuplicate;
+    let ogFileName = fileName;
+
+    do {
+      i++;
+      foundDuplicate = false;
+      for (let k = 0; k < childFiles.length - 1; k++) {
+        if (childFiles[k].name === fileName) {
+          fileName = appendToFilename(ogFileName, `(${i})`);
+          foundDuplicate = true;
+        }
+      }
+    } while (foundDuplicate);
+
+    return fileName;
+  };
+
   // Only used for deleting single file
   const deleteFile = (fileId) => {
     database.files
@@ -100,6 +197,7 @@ export const DBProvider = ({ children }) => {
               .delete()
               .then((snapshot) => {
                 getChildFiles();
+
                 handleAlert('success', 'File successfully deleted');
                 // alert success
               })
@@ -358,6 +456,30 @@ export const DBProvider = ({ children }) => {
     link.click();
   };
 
+  const createFolder = (folderName = name) => {
+    const path = [...currentFolder.path];
+    path.push({ name: currentFolder.name, id: currentFolder.id });
+
+    try {
+      database.folders.add({
+        name: folderName,
+        parentId: currentFolder.id,
+        userId: currentUser.uid,
+        fileSize: '-',
+        isFolder: true,
+        path: path,
+        timestamp: formatTime(database.getCurrentTimestamp()),
+      });
+      handleAlert('success', 'Folder created');
+    } catch (error) {
+      handleAlert('error', 'Oops! Something went wrong');
+    }
+
+    getChildFolders();
+
+    setName('');
+  };
+
   const value = {
     currentFolder,
     getChildFolders,
@@ -392,6 +514,8 @@ export const DBProvider = ({ children }) => {
     setURL,
     URL,
     downloadFile,
+    createFolder,
+    uploadFile,
   };
 
   return <DBContext.Provider value={value}>{children}</DBContext.Provider>;
