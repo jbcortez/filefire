@@ -9,6 +9,7 @@ import FolderBreadcrumbs from '../layout/FolderBreadcrumbs';
 import ContextMenu from '../layout/ContextMenu';
 import Alert from '../layout/Alert';
 import Modal from '../layout/Modal';
+import MobileMenu from '../layout/MobileMenu';
 
 const Dashboard = () => {
   const {
@@ -66,6 +67,7 @@ const Dashboard = () => {
           submitText='Copy link'
           urlModal={true}
         />
+        <MobileMenu />
       </div>
       {alert && <Alert formAlert={false} />}
     </div>

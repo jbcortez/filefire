@@ -1,4 +1,4 @@
-export const styles = {
+export const styles = (theme) => ({
   formContainer: {
     maxWidth: '40rem',
     marginTop: '4rem',
@@ -10,6 +10,13 @@ export const styles = {
     backgroundColor: 'rgb(241, 241, 241)',
     '& h2': {
       marginBottom: '2rem',
+    },
+    [theme.breakpoints.down('sm')]: {
+      backgroundColor: 'rgba(0,0,0,0)',
+      boxShadow: '0 0 0 #FFF',
+      border: 'none',
+      marginBottom: '-2rem',
+      marginTop: '2rem',
     },
   },
   form: {
@@ -31,8 +38,20 @@ export const styles = {
     borderRadius: 5,
     outline: 'none',
     transform: 'translate(-50%, -50%)',
+    [theme.breakpoints.up('md')]: {
+      minWidth: '50rem',
+    },
+    [theme.breakpoints.down('sm')]: {
+      minWidth: '90vw',
+    },
   },
   alert: {
     marginBottom: '1.5rem',
   },
-};
+  googleButton: {
+    '& i': {
+      marginRight: '1rem',
+    },
+    marginTop: '1.5rem',
+  },
+});

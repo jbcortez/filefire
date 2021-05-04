@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -15,13 +15,11 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
-  const { signUp } = useAuth();
+  const { signUp, logInWithGoogle, currentUser } = useAuth();
   const { handleAlert, alert } = useDB();
 
   const useStyles = makeStyles(styles);
   const classes = useStyles();
-
-  const history = useHistory();
 
   const onEmailChange = (e) => {
     setEmail(e.target.value);
@@ -38,11 +36,25 @@ const SignUp = () => {
 
     try {
       await signUp(email, password);
-      history.push('/');
-    } catch (e) {
-      handleAlert('error', e.message);
+    } catch (err) {
+      handleAlert('error', 'Oops! Something went wrong');
     }
   };
+
+  const handleLogInWithGoogle = async () => {
+    try {
+      await logInWithGoogle();
+    } catch (err) {
+      handleAlert('error', 'Oops! Something went wrong');
+    }
+  };
+
+  const history = useHistory();
+  useEffect(() => {
+    if (currentUser) {
+      history.push('/');
+    }
+  }, [currentUser, history]);
 
   return (
     <Fragment>
@@ -110,6 +122,16 @@ const SignUp = () => {
             Sign Up
           </Button>
         </form>
+
+        <Button
+          className={classes.googleButton}
+          variant='outlined'
+          color='primary'
+          fullWidth
+          onClick={handleLogInWithGoogle}>
+          <i className='fab fa-google'></i>
+          Sign up with Google
+        </Button>
       </Container>
       <div
         style={{ marginTop: '1em', textAlign: 'center', fontSize: '1.3rem' }}>

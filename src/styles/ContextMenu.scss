@@ -10,13 +10,18 @@
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 
-  & .active {
+  &.active {
     transform: scale(1);
     transition: transform 300ms ease-in-out;
   }
 
   & .item {
     list-style: none;
+    font-size: 1.6rem;
+
+    &:hover {
+      background: rgb(240, 240, 240);
+    }
     & i {
       padding: 0 1rem;
     }
@@ -29,4 +34,10 @@
 
 .hidden {
   display: none;
+}
+
+@media screen and (max-width: 480px) {
+  #context-menu {
+    display: none;
+  }
 }

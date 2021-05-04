@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import Button from '@material-ui/core/Button';
 import { useDB } from '../../contexts/DBContext';
+import '../../styles/Dashboard.scss';
 
 const UploadFileButton = () => {
   const { uploadFile } = useDB();
@@ -8,7 +9,8 @@ const UploadFileButton = () => {
   return (
     <Fragment>
       <Button
-        style={{ width: '15rem', marginBottom: '1.5rem' }}
+        style={{ marginBottom: '1.5rem' }}
+        className='btn'
         variant='contained'
         color='primary'
         component='label'>

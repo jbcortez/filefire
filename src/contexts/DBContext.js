@@ -389,6 +389,7 @@ export const DBProvider = ({ children }) => {
 
   const handleContextMenu = (e) => {
     e.preventDefault();
+
     setMenuTarget(e.target.innerText);
 
     // Displays folder options when right-click a folder
@@ -503,6 +504,7 @@ export const DBProvider = ({ children }) => {
     alertMsg,
     handleContextMenu,
     menuTarget,
+    setMenuTarget,
     handleRenameSubmit,
     handleDelete,
     openRename,

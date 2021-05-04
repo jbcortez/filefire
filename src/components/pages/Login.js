@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -17,7 +17,7 @@ const Login = () => {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
 
-  const { logIn } = useAuth();
+  const { logIn, currentUser, logInWithGoogle } = useAuth();
   const { handleAlert, alert } = useDB();
 
   const history = useHistory();
@@ -32,6 +32,20 @@ const Login = () => {
       handleAlert('error', 'Incorrect username or password');
     }
   };
+
+  const handleLogInWithGoogle = async () => {
+    try {
+      await logInWithGoogle();
+    } catch (err) {
+      handleAlert('error', 'Oops! Something went wrong');
+    }
+  };
+
+  useEffect(() => {
+    if (currentUser) {
+      history.push('/');
+    }
+  }, [currentUser, history]);
 
   return (
     <Fragment>
@@ -88,6 +102,15 @@ const Login = () => {
             Log In
           </Button>
         </form>
+        <Button
+          className={classes.googleButton}
+          variant='outlined'
+          color='primary'
+          fullWidth
+          onClick={handleLogInWithGoogle}>
+          <i className='fab fa-google'></i>
+          Log in with Google
+        </Button>
       </Container>
       <div
         style={{ marginTop: '1em', textAlign: 'center', fontSize: '1.3rem' }}>

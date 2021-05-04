@@ -8,9 +8,23 @@
   &__item {
     font-weight: 500;
     cursor: pointer;
+
+    &:not(:last-child) {
+      color: blue;
+    }
+
+    &:hover:not(:last-child) {
+      text-decoration: underline;
+    }
   }
 }
 
 .separator {
-  padding: 0 1rem;
+  padding: 0 0.5rem;
+}
+
+@media screen and (max-width: 480px) {
+  .breadcrumbs {
+    margin-bottom: 1.5rem;
+  }
 }
