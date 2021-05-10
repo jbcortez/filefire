@@ -10,6 +10,7 @@ import ContextMenu from '../layout/ContextMenu';
 import Alert from '../layout/Alert';
 import Modal from '../layout/Modal';
 import MobileMenu from '../layout/MobileMenu';
+import ProgressBar from '../layout/ProgressBar';
 
 const Dashboard = () => {
   const {
@@ -69,6 +70,7 @@ const Dashboard = () => {
         />
         <MobileMenu />
       </div>
+      <ProgressBar />
       {alert && <Alert formAlert={false} />}
     </div>
   );

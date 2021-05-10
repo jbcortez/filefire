@@ -1,6 +1,7 @@
-1. log in with google
-2. style mobile
-3. set up media queries
+* Upload progress
+* enums: loading, not loading, error
+* move files and folders
+* drag and drop
 
     
 

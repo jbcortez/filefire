@@ -1,14 +1,14 @@
 #alert {
   position: absolute;
-  bottom: 10rem;
-  right: 4rem;
+  bottom: 2rem;
+  right: 2rem;
   z-index: 200;
 }
 
 @media screen and (max-width: 480px) {
   #alert {
-    bottom: 0.5rem;
-    right: 0.5rem;
+    bottom: 1rem;
+    right: 1rem;
     z-index: 200;
   }
 }

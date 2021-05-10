@@ -31,7 +31,7 @@
 
 .fileList-wrapper {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr) minmax(0, 1fr);
   padding: 2rem 0;
   padding-right: 3rem;
   font-size: 1.3rem;
@@ -52,6 +52,14 @@
     border-bottom: 1px solid #e7e7e7;
     color: rgb(58, 58, 58);
 
+    & .text {
+      text-overflow: ellipsis;
+      width: 300px;
+      z-index: 10;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
     & i {
       padding: 0 1.3rem;
       font-size: 2rem;
@@ -61,6 +69,7 @@
       cursor: pointer;
       font-weight: 500;
       outline: none;
+      text-overflow: ellipsis;
 
       &.selected {
         background-color: #d3e5ff;
@@ -73,11 +82,12 @@
     }
   }
 }
+
 @media screen and (max-width: 480px) {
   .fileList-wrapper {
     display: grid;
     grid-gap: 1rem;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     overflow-y: visible;
     padding: 0;
     margin: 0;
@@ -91,6 +101,15 @@
       color: #fff;
       padding: 0;
 
+      & .text {
+        text-overflow: ellipsis;
+        width: 120px;
+        z-index: 10;
+        white-space: nowrap;
+        overflow: hidden;
+        text-align: center;
+      }
+
       & .icon {
         position: absolute;
         z-index: 0;
@@ -101,10 +120,6 @@
         transform: translate(-50%, -50%);
       }
     }
-  }
-
-  .text {
-    z-index: 10;
   }
 
   .grid-contents {

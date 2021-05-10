@@ -28,6 +28,13 @@ export const DBProvider = ({ children }) => {
   const [openRename, setOpenRename] = useState(false);
   const [openURL, setOpenURL] = useState(false);
   const [URL, setURL] = useState('');
+  const [progress, setProgress] = useState({
+    loading: false,
+    completed: false,
+    error: false,
+    percent: 0,
+    name: '',
+  });
 
   const { currentUser } = useAuth();
 
@@ -91,6 +98,14 @@ export const DBProvider = ({ children }) => {
     let folderPath = [];
     let fileName = file.name;
 
+    setProgress((prev) => ({
+      name: fileName,
+      percent: 0,
+      error: false,
+      loading: true,
+      completed: false,
+    }));
+
     currentFolder.path.forEach((folder) => {
       if (folder.id !== 'root') {
         folderPath.push(folder.id);
@@ -115,12 +130,40 @@ export const DBProvider = ({ children }) => {
       'state_changed',
       (snapshot) => {
         // Observe state change events such as progress, pause, and resume
+        let progress = Math.round(
+          (uploadTask.snapshot.bytesTransferred /
+            uploadTask.snapshot.totalBytes) *
+            100
+        );
+        setProgress((prev) => ({
+          ...prev,
+          percent: progress + '%',
+        }));
       },
       (error) => {
-        //handle unsucessful uploads
+        //handle unsuccessful uploads
+        setProgress((prev) => ({
+          error: true,
+          loading: false,
+          name: 'Error',
+          percent: '',
+          completed: false,
+        }));
       },
       () => {
         // After upload is successful...
+        setProgress((prev) => ({
+          ...prev,
+          completed: true,
+        }));
+
+        setTimeout(() => {
+          setProgress((prev) => ({
+            ...prev,
+            loading: false,
+          }));
+        }, 1000);
+
         uploadTask.snapshot.ref.getDownloadURL().then((url) => {
           database.files.add({
             name: fileName,
@@ -132,7 +175,6 @@ export const DBProvider = ({ children }) => {
           });
 
           getChildFiles();
-          handleAlert('success', 'File successfully uploaded');
         });
       }
     );
@@ -369,7 +411,7 @@ export const DBProvider = ({ children }) => {
     setAlert(true);
     setTimeout(() => {
       setAlert(false);
-    }, 5000);
+    }, 3000);
   };
 
   //======================== Begin Context Menu ========================
@@ -518,6 +560,7 @@ export const DBProvider = ({ children }) => {
     downloadFile,
     createFolder,
     uploadFile,
+    progress,
   };
 
   return <DBContext.Provider value={value}>{children}</DBContext.Provider>;
