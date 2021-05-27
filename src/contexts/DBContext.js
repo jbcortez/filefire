@@ -20,6 +20,7 @@ export const DBProvider = ({ children }) => {
   const [currentFolder, setCurrentFolder] = useState(ROOT_FOLDER);
   const [childFolders, setChildFolders] = useState([]);
   const [childFiles, setChildFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState(''); // used for modal form input
   const [alert, setAlert] = useState(false);
   const [alertType, setAlertType] = useState('success');
@@ -561,6 +562,8 @@ export const DBProvider = ({ children }) => {
     createFolder,
     uploadFile,
     progress,
+    loading,
+    setLoading,
   };
 
   return <DBContext.Provider value={value}>{children}</DBContext.Provider>;

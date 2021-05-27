@@ -14,7 +14,7 @@ const FolderBreadcrumbs = ({ currentFolder }) => {
               <span
                 onClick={() => selectFolder(folder.id)}
                 className='breadcrumbs__item'>
-                {folder.name}
+                {folder.name === 'root' ? 'My files' : folder.name}
               </span>
               <span className='separator'>
                 {currentFolder.path.length > 0 ? '/' : ''}
@@ -22,7 +22,9 @@ const FolderBreadcrumbs = ({ currentFolder }) => {
             </span>
           );
         })}
-      <span className='breadcrumbs__item'>{currentFolder.name}</span>
+      <span className='breadcrumbs__item' style={{ cursor: 'auto' }}>
+        {currentFolder.name === 'root' ? 'My files' : currentFolder.name}
+      </span>
     </div>
   );
 };

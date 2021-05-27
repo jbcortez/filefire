@@ -10,8 +10,11 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { Fragment } from 'react';
 import PrivateRoute from '../routes/PrivateRoute';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Loading from './layout/Loading';
+import { useDB } from '../contexts/DBContext';
 
 const App = () => {
+  const { loading, setLoading } = useDB();
   const theme = createMuiTheme({
     typography: {
       htmlFontSize: 10,
@@ -24,13 +27,17 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <Navbar />
         <Fragment>
-          <Switch>
-            <Route exact path='/login' component={Login} />
-            <Route exact path='/signup' component={SignUp} />
-            <Route exact path='/forgotpassword' component={ForgotPassword} />
-            <PrivateRoute exact path='/account' component={Account} />
-            <PrivateRoute exact path='/' component={Dashboard} />
-          </Switch>
+          {loading ? (
+            <Loading />
+          ) : (
+            <Switch>
+              <Route exact path='/login' component={Login} />
+              <Route exact path='/signup' component={SignUp} />
+              <Route exact path='/forgotpassword' component={ForgotPassword} />
+              <PrivateRoute exact path='/account' component={Account} />
+              <PrivateRoute exact path='/' component={Dashboard} />
+            </Switch>
+          )}
         </Fragment>
       </ThemeProvider>
     </Router>

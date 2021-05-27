@@ -31,6 +31,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: hidden;
   }
 
   .sidebar {
@@ -53,7 +54,7 @@
     height: 100vh;
     width: 100vw;
     background-color: rgba(0, 0, 0, 0);
-    position: absolute;
+    position: fixed;
     top: 0;
     right: -1100px;
     z-index: 100;

@@ -18,7 +18,7 @@ const Login = () => {
   const classes = useStyles();
 
   const { logIn, currentUser, logInWithGoogle } = useAuth();
-  const { handleAlert, alert } = useDB();
+  const { handleAlert, alert, setLoading, loading } = useDB();
 
   const history = useHistory();
 
@@ -26,9 +26,11 @@ const Login = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       await logIn(email, password);
-      history.push('/');
+      setLoading(false);
     } catch {
+      setLoading(false);
       handleAlert('error', 'Incorrect username or password');
     }
   };
@@ -36,7 +38,9 @@ const Login = () => {
   const handleLogInWithGoogle = async () => {
     try {
       await logInWithGoogle();
+      setLoading(true);
     } catch (err) {
+      setLoading(false);
       handleAlert('error', 'Oops! Something went wrong');
     }
   };
@@ -44,6 +48,7 @@ const Login = () => {
   useEffect(() => {
     if (currentUser) {
       history.push('/');
+      setLoading(false);
     }
   }, [currentUser, history]);
 

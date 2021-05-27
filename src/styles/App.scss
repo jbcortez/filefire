@@ -16,6 +16,32 @@ body {
   align-items: center;
 }
 
+#spinner {
+  animation: spinner 1s linear infinite;
+}
+
+.loading__icon-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 80vh;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 @media screen and (max-width: 480px) {
   body {
     overflow-y: visible;

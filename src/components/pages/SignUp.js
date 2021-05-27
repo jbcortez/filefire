@@ -16,7 +16,7 @@ const SignUp = () => {
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const { signUp, logInWithGoogle, currentUser } = useAuth();
-  const { handleAlert, alert } = useDB();
+  const { handleAlert, alert, setLoading } = useDB();
 
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -35,16 +35,22 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       await signUp(email, password);
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       handleAlert('error', 'Oops! Something went wrong');
     }
   };
 
   const handleLogInWithGoogle = async () => {
     try {
+      setLoading(true);
       await logInWithGoogle();
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       handleAlert('error', 'Oops! Something went wrong');
     }
   };
@@ -53,6 +59,7 @@ const SignUp = () => {
   useEffect(() => {
     if (currentUser) {
       history.push('/');
+      setLoading(false);
     }
   }, [currentUser, history]);
 
