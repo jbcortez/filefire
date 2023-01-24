@@ -1,4 +1,4 @@
-<h1 style='color: red'>This project is outdated and no longer runs</h1>
+<h1 style="color:red">This project is outdated and no longer runs</h1>
 
 <h1>FileFire</h1>
 <h2>Overview</h2>
