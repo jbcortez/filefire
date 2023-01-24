@@ -1,3 +1,5 @@
+<h1 style='color: red'>This project is outdated and no longer runs</h1>
+
 <h1>FileFire</h1>
 <h2>Overview</h2>
 <p>
@@ -23,6 +25,3 @@ FileFire is a cloud storage application that I developed using React, SASS, Mate
 <h4>SASS</h4>
 
 <h4>Material-UI</h4>
-
-<h2>Running the application</h2>
-<p>You may visit the live application <a href="filefire-5574a.web.app">here</a>.</p>
